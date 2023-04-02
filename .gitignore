@@ -1,0 +1,15 @@
+*.dbg
+*.bak
+*.exe
+*.csv
+*.dll
+*.so
+*.lps
+*.a
+*.ppu
+*.o
+link*.res
+lib
+ppas.sh
+deploy
+.vscode
