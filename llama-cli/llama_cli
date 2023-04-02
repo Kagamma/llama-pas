@@ -1,0 +1,8 @@
+program llama_cli;
+
+uses
+  llama, ggml;
+
+begin
+end.
+
