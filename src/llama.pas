@@ -62,6 +62,7 @@ function llama_sample_top_p_top_k(ctx: Pllama_context; last_n_tokens_data: Pllam
 procedure llama_print_timings(ctx: Pllama_context); LLAMACALL; external {$ifndef LLAMA_STATIC}LLAMALIB{$endif};
 procedure llama_reset_timings(ctx: Pllama_context); LLAMACALL; external {$ifndef LLAMA_STATIC}LLAMALIB{$endif};
 function llama_print_system_info: PChar; LLAMACALL; external {$ifndef LLAMA_STATIC}LLAMALIB{$endif};
+function llama_context_default_params: Tllama_context_params; LLAMACALL; external {$ifndef LLAMA_STATIC}LLAMALIB{$endif};
 
 implementation
 
