@@ -55,7 +55,7 @@ var
     if I > ParamCount then
     begin
       Writeln('Invalid parameter');
-      Exit;
+      Halt;
     end;
   end;
 
