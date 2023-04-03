@@ -28,9 +28,13 @@ end;
 var
   Ctx     : Pllama_context;
   Params  : Tllama_context_params;
-  Model   : String;
+  History : TStringList;
+  S,
+  FullText,
+  SessionFName,
+  ModelFName: String;
   Pred    : String;
-  Prompt  : String = 'Tell me how cool the Pascal programming langauge is!';
+  Prompt  : String;
   Tokens  : array[0..3] of Tllama_token = (0, 1, 2, 3);
   Token,
   MissingToken: Tllama_token;
@@ -46,6 +50,22 @@ var
   P       : Pllama_token;
   TokenStr: String;
 
+procedure SessionSave;
+var
+  FS: TStringList;
+begin
+  if SessionFName = '' then
+    Exit;
+  History.SaveToFile(SessionFName);
+end;
+
+procedure SessionLoad;
+begin
+  if (SessionFName = '') or (not FileExists(SessionFName)) then
+    Exit;
+  History.LoadFromFile(SessionFName);
+end;
+
 procedure ParseParameters;
 var
   I: Integer = 1;
@@ -60,39 +80,52 @@ var
   end;
 
 begin
+  if ParamCount = 1 then
+  begin
+    Writeln('Usage: llama-cli -m <model_name> -p <prompt>');
+    Halt;
+  end;
   while I <= ParamCount do
   begin
     case ParamStr(I) of
       '-m':
         begin
           Increase;
-          Model := ParamStr(I);
+          ModelFName := ParamStr(I);
         end;
       '-p':
         begin
           Increase;
           Prompt := ParamStr(I);
         end;
+      '-s':
+        begin
+          Increase;
+          SessionFName := ParamStr(I);
+        end;
       '-h':
         begin
           Writeln(' -h: This help screen');
-          Writeln(' -p: Prompt');
           Writeln(' -m: Path to model file');
+          Writeln(' -p: Prompt');
+          Writeln(' -s: Session file (not really work, and time consuming)');
           Halt;
         end;
     end;
     Inc(I);
   end;
+  if Prompt = '' then
+  begin
+    Writeln('No prompt provided.');
+    Halt;
+  end;
 end;
 
 begin
-  Randomize;
   ParseParameters;
-
   Params := llama_context_default_params;
-  Params.seed := Random($FFFFFFFF);
 
-  Ctx := llama_init_from_file(PChar(Model), Params);
+  Ctx := llama_init_from_file(PChar(ModelFName), Params);
   if Ctx = nil then
   begin
     Writeln('Failed to load model');
@@ -102,10 +135,19 @@ begin
   SSTokens := TTokenList.Create;
   EmbdInp := TTokenList.Create;
   Embd := TTokenList.Create;
+  History := TStringList.Create;
+  SessionLoad;
 
   Writeln;
   Writeln(Prompt);
-  Prompt := '### Instruction: '#10#13 + Prompt + #10#10'### Response: '#10#10;
+
+  S := Prompt;
+  if History.Count = 0 then
+    Prompt := '### Instruction: '#10#13 + Prompt + #10#10'### Response: '#10#10
+  else
+    Prompt := History.Text + #10#10'### Instruction: '#10#13 + Prompt + #10#10'### Response: '#10#10;
+  SessionLoad;
+  History.Add(S);
 
   llama_eval(ctx, @Tokens[0], Length(Tokens), 0, N_THREADS);
 
@@ -187,8 +229,11 @@ begin
   end;
   Writeln;
 
+  History.Add(Pred);
+  SessionSave;
   llama_free(Ctx);
   SSTokens.Free;
   EmbdInp.Free;
   Embd.Free;
+  History.Free;
 end.
