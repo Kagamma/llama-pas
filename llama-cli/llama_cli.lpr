@@ -175,6 +175,9 @@ begin
   if IsInteractive then
     Writeln(#10'Interactive mode is ON'#10);
 
+  if KvCacheSize > 0 then
+    llama_set_kv_cache(Ctx, @KvCache[0], KvCacheSize, KvTokenCount);
+
   repeat
     if not IsInteractive then
     begin
@@ -188,14 +191,7 @@ begin
     end;
 
     S := Prompt;
-    if (KvCacheSize > 0) and (not IsInteractive) then
-    begin
-      llama_set_kv_cache(Ctx, @KvCache[0], KvCacheSize, KvTokenCount);
-      Prompt :=  #10#10#10#10'### Instruction: ' + Prompt + #10#13 + '### Response: ';
-    end else
-    begin
-      Prompt := #10#10#10#10'### Instruction: ' + Prompt + #10#13 + '### Response: ';
-    end;
+    Prompt := #10#10#10#10'### Instruction: ' + Prompt + #10#13 + '### Response: ';
 
     // Convert prompt to embeddings
     EmbdInp.Count := Length(Prompt) + 1;
