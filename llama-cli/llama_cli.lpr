@@ -147,6 +147,7 @@ begin
       '-h':
         begin
           Writeln(' -h: This help screen');
+          Writeln(' -i: Interactive mode');
           Writeln(' -m: Path to model file');
           Writeln(' -p: Prompt');
           Writeln(' -s: Session file (not really work, and time consuming)');
