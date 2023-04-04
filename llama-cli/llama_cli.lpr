@@ -156,7 +156,7 @@ begin
   SSTokenCount := llama_tokenize(Ctx, STOP_SEQUENCE, SSTokens.Data, SSTokens.Count, False);
   SSTokens.Count := SSTokenCount;
 
-  // Convert prompt to embedings
+  // Convert prompt to embeddings
   EmbdInp.Count := Length(Prompt) + 1;
   C := llama_tokenize(Ctx, PChar(Prompt), EmbdInp.Data, EmbdInp.Count, False);
   EmbdInp.Count := C;

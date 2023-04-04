@@ -64,6 +64,11 @@ procedure llama_reset_timings(ctx: Pllama_context); LLAMACALL; external {$ifndef
 function llama_print_system_info: PChar; LLAMACALL; external {$ifndef LLAMA_STATIC}LLAMALIB{$endif};
 function llama_context_default_params: Tllama_context_params; LLAMACALL; external {$ifndef LLAMA_STATIC}LLAMALIB{$endif};
 
+function llama_get_kv_cache(ctx: Pllama_context): PByte; LLAMACALL; external {$ifndef LLAMA_STATIC}LLAMALIB{$endif};
+function llama_get_kv_cache_size(ctx: Pllama_context): csize_t; LLAMACALL; external {$ifndef LLAMA_STATIC}LLAMALIB{$endif};
+function llama_get_kv_cache_token_count(ctx: Pllama_context): cint; external {$ifndef LLAMA_STATIC}LLAMALIB{$endif};
+procedure llama_set_kv_cache(ctx: Pllama_context; kv_cache: PByte; n_size: csize_t; n_token_count: cint); LLAMACALL; external {$ifndef LLAMA_STATIC}LLAMALIB{$endif};
+
 implementation
 
 initialization
