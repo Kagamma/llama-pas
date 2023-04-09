@@ -117,7 +117,7 @@ var
   end;
 
 begin
-  if ParamCount = 1 then
+  if ParamCount = 0 then
   begin
     Writeln('Usage: llama-cli -m <model_name> -p <prompt>');
     Halt;
