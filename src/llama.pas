@@ -63,6 +63,7 @@ procedure llama_print_timings(ctx: Pllama_context); LLAMACALL; external {$ifndef
 procedure llama_reset_timings(ctx: Pllama_context); LLAMACALL; external {$ifndef LLAMA_STATIC}LLAMALIB{$endif};
 function llama_print_system_info: PChar; LLAMACALL; external {$ifndef LLAMA_STATIC}LLAMALIB{$endif};
 function llama_context_default_params: Tllama_context_params; LLAMACALL; external {$ifndef LLAMA_STATIC}LLAMALIB{$endif};
+function llama_apply_lora_from_file(ctx: Pllama_context; path_lora, path_base_model: PChar; n_threads: cint): cint; LLAMACALL; external {$ifndef LLAMA_STATIC}LLAMALIB{$endif};
 
 function llama_get_kv_cache(ctx: Pllama_context): PByte; LLAMACALL; external {$ifndef LLAMA_STATIC}LLAMALIB{$endif};
 function llama_get_kv_cache_size(ctx: Pllama_context): csize_t; LLAMACALL; external {$ifndef LLAMA_STATIC}LLAMALIB{$endif};
